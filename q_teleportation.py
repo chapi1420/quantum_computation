@@ -1,4 +1,3 @@
-# pip install qiskit qiskit-aer
 
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector, partial_trace, Operator
@@ -16,7 +15,7 @@ def quantum_teleportation():
     # Step 2: Prepare the state to teleport (Alice's qubit)
     qc.h(0)
     qc.t(0)
-
+ 
     # Step 3: Create entangled Bell pair between q1 (Alice) and q2 (Bob)
     qc.h(1)
     qc.cx(1, 2)
