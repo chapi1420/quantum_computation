@@ -1,0 +1,63 @@
+# First, install required packages if not already:
+# pip install qiskit qiskit-aer
+
+import numpy as np
+from qiskit import QuantumCircuit
+from qiskit_aer import AerSimulator
+
+def deutsch_jozsa_algorithm(is_constant):
+    """
+    Solves the Deutsch-Jozsa problem, demonstrating a quantum speedup.
+
+    The algorithm determines if a function is constant or balanced in one query.
+    """
+    print(f"--- Running Deutsch-Jozsa for a {'constant' if is_constant else 'balanced'} function ---")
+
+    # Step 1: Initialize the quantum circuit
+    qc = QuantumCircuit(2, 1)
+
+    # Step 2: Prepare the qubits
+    qc.h(0)     # Input qubit in superposition
+    qc.x(1)     # Flip ancillary
+    qc.h(1)     # Ancillary into |-> state
+    qc.barrier()
+
+    # Step 3: Oracle
+    if is_constant:
+        # f(x) = 0 → do nothing
+        # For f(x) = 1 → qc.x(1)
+        pass
+    else:
+        # Balanced function f(x)=x → CNOT
+        qc.cx(0, 1)
+    qc.barrier()
+
+    # Step 4: Final Hadamard
+    qc.h(0)
+    qc.barrier()
+
+    # Step 5: Measure
+    qc.measure(0, 0)
+
+    # Step 6: Simulate with AerSimulator
+    backend = AerSimulator()
+    job = backend.run(qc, shots=1)   # ✅ new way (no execute())
+    result = job.result()
+    counts = result.get_counts()
+    measured_result = int(list(counts.keys())[0])
+
+    print(f"Measured result is: {measured_result}")
+    
+    if measured_result == 0:
+        print("✅ The function is constant.")
+        assert is_constant, "Result is incorrect."
+    else:
+        print("✅ The function is balanced.")
+        assert not is_constant, "Result is incorrect."
+    
+    print("-------------------------------------")
+
+
+if __name__ == "__main__":
+    deutsch_jozsa_algorithm(is_constant=True)
+    deutsch_jozsa_algorithm(is_constant=False)
