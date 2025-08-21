@@ -15,9 +15,9 @@ def deutsch_jozsa_algorithm(is_constant):
     qc = QuantumCircuit(2, 1)
 
     # Step 2: Prepare the qubits
-    qc.h(0)     # Input qubit in superposition
-    qc.x(1)     # Flip ancillary
-    qc.h(1)     # Ancillary into |-> state
+    qc.h(0)     
+    qc.x(1)    
+    qc.h(1)    
     qc.barrier()
 
     # Step 3: Oracle
@@ -39,7 +39,7 @@ def deutsch_jozsa_algorithm(is_constant):
 
     # Step 6: Simulate with AerSimulator
     backend = AerSimulator()
-    job = backend.run(qc, shots=1)   # ✅ new way (no execute())
+    job = backend.run(qc, shots=1)  
     result = job.result()
     counts = result.get_counts()
     measured_result = int(list(counts.keys())[0])
