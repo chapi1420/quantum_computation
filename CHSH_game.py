@@ -1,4 +1,3 @@
-# pip install qiskit qiskit-aer
 
 import numpy as np
 from qiskit import QuantumCircuit, transpile
